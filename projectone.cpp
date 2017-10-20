@@ -54,8 +54,8 @@ bool wordtest(string word){
 bool search (string line, string word){
     int x = 0; //x and y count position in string.
     int y = 0;
-    for (int i = 0; i < line.length(); i++){
-        if (word[x] == line[y]){
+    for (int i = 0; i < line.length(); i++){ 
+        if (word[x] == line[y]){ //add or statments subtracting to make it check for positive and negetive chars.
             x++;
         }
     y++;
