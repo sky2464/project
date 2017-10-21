@@ -55,15 +55,18 @@ bool search (string line, string word){
     int x = 0; //x and y count position in string.
     int y = 0;
     for (int i = 0; i < line.length(); i++){ 
-        if (word[x] == line[y]){ //add or statments subtracting to make it check for positive and negetive chars.
+        if (word[x] == line[y] || word[x] == line[y] + 32 || word[x] + 32 == line [y]){ //This checks for match case insesitivily. Checks letter by letter.
             x++;
+            if (word.length() == x && line[y + 1] == ' '){ //This checks for match and prevents compund words from returning true such as apple vs apples.
+                return true;
+            }
         }
-    y++;
-    }
-    if (word.length() == x){
-        return true;
-    }
-    else {
-        return false;
+        else{
+            x = 0; // Resets in the case of a partial match eariler in the sentance. 
+        }
+        y++;
+        if (word.length() == x && y == line.length()){ //This checks for match and prevents compund words from returning true such as apple vs apples, But in the case of the end of the sentance rather then the middle.
+            return true;
+        }
     }
 }
