@@ -10,7 +10,12 @@ bool wordtest(string word);
 bool search(string line, string word);
 //Precondition: Enter the gotten line from scentences.txt and word you are testing for from words.txt.
 //Postcondition: Serches to see if word is in line will return true if word is in line.
-
+bool searchtwo (string line, string word);
+//Precondition: Enter the gotten word from match.txt and word you are testing for from words.txt.
+//Postcondition: Serches to see if the words match.
+//int numberofwords(string wordOne, string wordTwo, string wordThree, string wordFour, string wordfive, string wordSix, string wordSeven, string wordEight);
+//Precondition: Enter all words string from words.txt
+//Postcondion: Will return an int value equal to the number of words in words.txt.
 int main(){
     string wordOne, wordTwo, wordThree, wordFour, wordFive, wordSix, wordSeven, wordEight; 
     string line, lineTwo;
@@ -66,22 +71,33 @@ int main(){
         cerr << "Error finding/creating replace.txt" << endl;
         return(5);
     }
-    firstrun = true;
-    while (matchin.eof() == false){ // This loop does the input into the replace text. 
-        if (firstrun == false){
-            matchin.ignore();
-        }
-        getline(matchin, lineTwo);
-        for (int i = 0; i < lineTwo.length(); i++){ 
-            if (lineTwo[i] == wordOne[0] && lineTwo[i + wordOne.length()] == wordOne[wordOne.length()]){ //Currently this only works if there is not words that are the same lenght that differ in the middle for example cat vs car.
-            replace << wordTwo << " ";
-            i = i + wordOne.length();     
-        }
+    bool sentencestart = true;
+    while (matchin.eof() == false){ // This loop does the input into the replace text. Has issues with compound words. Replaces extra nonexistant word.
+        matchin >> lineTwo;
+        if (searchtwo(lineTwo, wordOne) == true){
+            if (sentencestart = true){
+                for (int i = 0; i < wordTwo.length(); i++){
+                    replace << wordTwo[i];
+                }
+            }
             else{
-            replace << lineTwo[i];
+                replace << wordTwo;
+            }
+            if (lineTwo[lineTwo.length()-1] != '.'){
+            replace << " ";
             }
         }
-        replace << endl;
+        else if (searchtwo(lineTwo, wordOne) == false){
+            replace << lineTwo;
+            if (lineTwo[lineTwo.length()-1] != '.'){
+            replace << " ";
+            }
+        }
+        if (lineTwo[lineTwo.length()-1] == '.'){
+            replace << "." << endl;
+            sentencestart = true;
+        }
+        sentencestart = false;
     }
     cout << wordTwo.length() << endl;
 }
@@ -114,3 +130,57 @@ bool search (string line, string word){
         }
     }
 }
+
+bool searchtwo (string line, string word){
+    int x = 0; //x and y count position in string.
+    int y = 0;
+    for (int i = 0; i < line.length(); i++){ 
+        if (word[x] == line[y] || word[x] == line[y] + 32 || word[x] + 32 == line [y]){ //This checks for match case insesitivily. Checks letter by letter.
+            x++;
+            if (word.length() == x){ //This checks for match and prevents compund words from returning true such as apple vs apples.
+                return true;
+            }
+        }
+        else{
+            x = 0; // Resets in the case of a partial match eariler in the sentance. 
+        }
+        y++;
+        if (word.length() == x && y == line.length()){ //This checks for match and prevents compund words from returning true such as apple vs apples, But in the case of the end of the sentance rather then the middle.
+            return true;
+        }
+    }
+}
+
+/*
+int numberofwords(string wordOne, string wordTwo, string wordThree, string wordFour, string wordfive, string wordSix, string wordSeven, string wordEight){
+    int x = 0 //x will be the number of words in existence.
+    if (wordtest(wordOne) == true){
+        x++;
+    }
+    if (wordtest(wordTwo) == true){
+        x++;
+    }
+    if (wordtest(wordThree) == true){
+        x++;
+    }
+    if (wordtest(wordThree) == true){
+        x++;
+    }
+    if (wordtest(wordFour) == true){
+        x++;
+    }
+    if (wordtest(wordFive) == true){
+        x++;
+    }
+    if (wordtest(wordSix) == true){
+        x++;
+    }
+    if (wordtest(wordSeven) == true){
+        x++;
+    }
+    if (wordtest(wordEight) == true){
+        x++;
+    }
+    return x; //return the number of words in words.txt
+}
+*/
