@@ -10,7 +10,7 @@ bool wordtest(string word);
 bool search(string line, string word);
 //Precondition: Enter the gotten line from scentences.txt and word you are testing for from words.txt.
 //Postcondition: Serches to see if word is in line will return true if word is in line.
-bool searchtwo (string line, string word);
+bool searchtwo (string wordOne, string wordTwo);
 //Precondition: Enter the gotten word from match.txt and word you are testing for from words.txt.
 //Postcondition: Serches to see if the words match.
 //int numberofwords(string wordOne, string wordTwo, string wordThree, string wordFour, string wordfive, string wordSix, string wordSeven, string wordEight);
@@ -131,6 +131,20 @@ bool wordtest(string word){
     }
 }
 
+bool searchtwo(string wordOne, string word){
+    int x = 0;
+    int y = 0;
+    if(wordOne.length() != word.length()){
+        return false;
+    }
+    for (int i = 0; i < wordOne.length(); i++){
+        if(wordOne[i] != word[i] || wordOne[i] != word[i] + 32 || wordOne[i] + 32 != word[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
 int findAndReplace (string wordOne, string wordTwo){
     ifstream matchin; 
     ofstream replace;
@@ -147,70 +161,91 @@ int findAndReplace (string wordOne, string wordTwo){
     string line, word;
     line = "";
     char letter;
+    bool sentenceStart = true;
+    bool fileStart = true;
     while (matchin.eof() == false){
-        if(letter != ' ' || letter != '\n' || letter != '.'){
-            word = "";
-            cout << line << endl;
-            matchin.get(letter);
-            line = line + letter;
-            word = word + letter;
+        matchin >> word;
+        fileStart = false;
+        if (fileStart == false){
+            word = letter + word;
         }
-        if (search(wordOne, word + " ") == false || search(wordOne, " " + word + " ") == false || word == wordOne){
-            line = line + word;
-        }
-        else if(search(wordOne, word + " ") == true || search(wordOne, " " + word + " ") == true){
-            if(wordTwo[0] >= 97 && wordTwo[0] <= 122){
+        if (search(word, wordOne) == true){
+            if(wordTwo[0] >= 97 && wordTwo[0] <=122 && sentenceStart == true){
                 for(int i = 0; i < wordTwo.length(); i++){
-                    line = line + wordTwo[i];
+                    cout << i << endl;
+                    if(i == 0){
+                        replace << wordTwo[0] - 32; //To captilize it in case it is at the beging
+                    }
+                    else{
+                        replace << wordTwo[i];
+                    }
                 }
+                sentenceStart = false;
             }
             else{
-                line = line + wordTwo;
+                    replace << wordTwo;
             }
-            if (letter == '.'){
-                line = line + letter;
+            while(letter ==  ' '){
+                if(letter == ' '){
+                    replace << letter;
+                }
+                matchin.get(letter);
+                if (letter != ' '){
+                    break;
+                }
+            }
+            while(letter == '.'){
+                if(letter == '.'){
+                    sentenceStart == true;
+                    replace << letter;
+                }
+                matchin.get(letter);
+                if (letter != '.'){
+                    break;
+                }
+            }
+            while(letter == '\n'){
+                if(letter == '\n'){
+                    replace << letter;
+                }
+                matchin.get(letter);
+                if (letter != '\n'){
+                    break;
+                }
             }
         }
-        while (letter == ' '){
-            matchin.get(letter);
-            line = line + letter; 
-        }
-        while (letter == '\n'){
-            matchin.get(letter);
-            line = line + letter;
-        }
+        if (search(word, wordOne) == false){
+            replace << word;
+            while(letter ==  ' '){
+                if(letter == ' '){
+                    replace << letter;
+                }
+                matchin.get(letter);
+                if (letter != ' '){
+                    break;
+                }
+            }
+            while(letter == '.'){
+                if(letter == '.'){
+                    sentenceStart == true;
+                    replace << letter;
+                }
+                matchin.get(letter);
+                if (letter != '.'){
+                    break;
+                }
+            }
+            while(letter == '\n'){
+                if(letter == '\n'){
+                    replace << letter;
+                }
+                matchin.get(letter);
+                if (letter != '\n'){
+                    break;
+                }
+            }
+        }       
     }
-    replace << line;
     matchin.close();
     replace.close();
 }
-        
-        
-        
-        
-        /*
-        cout << word << endl;
-        if (search(wordOne, word) == false){
-            for (int i = 0; i < word.length(); i++){
-                matchin.get(letter);
-                line = line + letter;
-                if (letter == '.'){
-                    cout << line << endl;
-                    replace << line << endl;
-                }
-            }
-        }
-        else if (search(wordOne, word) == false){
-            line = line + wordTwo;
-            for (int i = 0; i < word.length(); i++){
-                matchin.get(letter);
-                line = line + letter;
-                if (letter == '.'){
-                    cout << line << endl;
-                    replace << line << "." << endl;
-                }
-            }
-        }
-    }
-}
-*/ 
