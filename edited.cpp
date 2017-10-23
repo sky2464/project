@@ -127,7 +127,7 @@ bool wordtest(string word){
         return false;
     }
     else {
-    return true;
+        return true;
     }
 }
 
@@ -135,12 +135,60 @@ int findAndReplace (string wordOne, string wordTwo){
     ifstream matchin; 
     ofstream replace;
     matchin.open("match.txt");
+    if (matchin.fail()){
+        cerr << "Error opening match.txt" << endl;
+        return (1);
+    }
     replace.open("replace.txt");
+    if (replace.fail()){
+        cerr << "Error creating/editing replace.txt" << endl;
+        return (2);
+    }
     string line, word;
     line = "";
     char letter;
     while (matchin.eof() == false){
-        matchin >> word;
+        if(letter != ' ' || letter != '\n' || letter != '.'){
+            word = "";
+            cout << line << endl;
+            matchin.get(letter);
+            line = line + letter;
+            word = word + letter;
+        }
+        if (search(wordOne, word + " ") == false || search(wordOne, " " + word + " ") == false || word == wordOne){
+            line = line + word;
+        }
+        else if(search(wordOne, word + " ") == true || search(wordOne, " " + word + " ") == true){
+            if(wordTwo[0] >= 97 && wordTwo[0] <= 122){
+                for(int i = 0; i < wordTwo.length(); i++){
+                    line = line + wordTwo[i];
+                }
+            }
+            else{
+                line = line + wordTwo;
+            }
+            if (letter == '.'){
+                line = line + letter;
+            }
+        }
+        while (letter == ' '){
+            matchin.get(letter);
+            line = line + letter; 
+        }
+        while (letter == '\n'){
+            matchin.get(letter);
+            line = line + letter;
+        }
+    }
+    replace << line;
+    matchin.close();
+    replace.close();
+}
+        
+        
+        
+        
+        /*
         cout << word << endl;
         if (search(wordOne, word) == false){
             for (int i = 0; i < word.length(); i++){
@@ -165,4 +213,4 @@ int findAndReplace (string wordOne, string wordTwo){
         }
     }
 }
-
+*/ 
