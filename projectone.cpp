@@ -1,3 +1,5 @@
+// Be sure that you remove the filename extentions , for example words.txt == words & ...
+
 #include <iostream>
 #include <fstream>
 #include <string>
