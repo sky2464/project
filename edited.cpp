@@ -17,6 +17,9 @@ bool searchtwo (string line, string word);
 //Precondition: Enter all words string from words.txt
 //Postcondion: Will return an int value equal to the number of words in words.txt.
 int matcher (string wordOne);
+//Precondition: Use word you wish to find matches for as the argument.
+//Postcondition: Will output all sentences from sentences.txt that contain the wordOne argument to match
+int findAndReplace (string wordOne, string wordTwo);
 
 int main(){
     string wordOne, wordTwo, wordThree, wordFour, wordFive, wordSix, wordSeven, wordEight; 
@@ -33,6 +36,7 @@ int main(){
     words >> wordOne >> wordTwo >> wordThree >> wordFour >> wordFive >> wordSeven >> wordEight;
     words.close();
     matcher(wordOne);
+    findAndReplace(wordOne, wordTwo);
 }
 
 int matcher(string wordOne){
@@ -57,11 +61,11 @@ int matcher(string wordOne){
     int stat = 0;
     while (sentences.eof() == false){
         sentences.get(letter);
-        while (sentenceEnd == true && letter == ' '){
+        while (sentenceEnd == true && letter == ' '){ //this gets rid of spaces after the period.
             sentences.get(letter);
         }
         sentenceEnd = false;        
-        if (letter == '\n'){
+        if (letter == '\n'){ //this gets rid of newline charecters.
             sentences.get(letter);
         }
         if (sentenceStart == true && letter >= 97 && letter <= 122){
@@ -126,3 +130,39 @@ bool wordtest(string word){
     return true;
     }
 }
+
+int findAndReplace (string wordOne, string wordTwo){
+    ifstream matchin; 
+    ofstream replace;
+    matchin.open("match.txt");
+    replace.open("replace.txt");
+    string line, word;
+    line = "";
+    char letter;
+    while (matchin.eof() == false){
+        matchin >> word;
+        cout << word << endl;
+        if (search(wordOne, word) == false){
+            for (int i = 0; i < word.length(); i++){
+                matchin.get(letter);
+                line = line + letter;
+                if (letter == '.'){
+                    cout << line << endl;
+                    replace << line << endl;
+                }
+            }
+        }
+        else if (search(wordOne, word) == false){
+            line = line + wordTwo;
+            for (int i = 0; i < word.length(); i++){
+                matchin.get(letter);
+                line = line + letter;
+                if (letter == '.'){
+                    cout << line << endl;
+                    replace << line << "." << endl;
+                }
+            }
+        }
+    }
+}
+
